@@ -1,4 +1,4 @@
-# Bike Tracker Mobile
+# Bike Tracks Mobile
 
 ## What this is
 React Native / Expo mobile app for a bike tracking app with NFC tagging and stolen bike reporting.
@@ -24,7 +24,7 @@ This is one of 3 repos in the project (api / web / mobile).
 
 ## Folder structure (target)
 ```
-bike-tracker-mobile/
+bike-tracks-mobile/
 ├── app/                 # Expo Router pages (file-based)
 │   ├── (auth)/          # Login / register screens
 │   ├── (tabs)/          # Main tab navigation
