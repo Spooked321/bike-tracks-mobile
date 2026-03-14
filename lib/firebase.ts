@@ -10,6 +10,11 @@ const firebaseConfig = {
 };
 
 // Guard against hot-reload re-initialization
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+let app;
+try {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+} catch (e) {
+  console.warn('Firebase init skipped:', e);
+}
 
 export default app;

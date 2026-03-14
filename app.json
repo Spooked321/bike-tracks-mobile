@@ -16,7 +16,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.biketracks.mobile",
       "entitlements": {
-        "com.apple.developer.nfc.readersession.formats": ["NDEF"]
+        "com.apple.developer.nfc.readersession.formats": [
+          "NDEF"
+        ]
       }
     },
     "android": {
@@ -25,7 +27,9 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.biketracks.mobile",
-      "permissions": ["android.permission.NFC"]
+      "permissions": [
+        "android.permission.NFC"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +47,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "20311209-cb24-453d-b061-b11302de0247"
+      }
     }
   }
 }

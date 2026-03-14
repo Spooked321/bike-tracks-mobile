@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useNFC } from '../../hooks/useNFC';
 import { getBikeById, BikeNotFoundError } from '../../api/bikeindex';
 import { BikeCard } from '../../components/BikeCard';
@@ -19,7 +20,8 @@ import type { BikeDetail } from '../../types/bike';
 type ScreenState = 'idle' | 'verifying' | 'verified' | 'writing' | 'error';
 
 export default function TagScreen() {
-  const { isSupported, isEnabled, state: nfcState, error: nfcError, writeId } = useNFC();
+  const router = useRouter();
+  const { isSupported, isEnabled, state: nfcState, error: nfcError, writeTag } = useNFC();
   const [bikeIdInput, setBikeIdInput] = useState('');
   const [screenState, setScreenState] = useState<ScreenState>('idle');
   const [bike, setBike] = useState<BikeDetail | null>(null);
@@ -54,8 +56,8 @@ export default function TagScreen() {
   async function handleWrite() {
     if (!bike) return;
     setScreenState('writing');
-    await writeId(bike.id);
-    // writeId shows an Alert on success; NFC errors are surfaced via nfcError
+    await writeTag(String(bike.id));
+    // writeTag shows an Alert on success; NFC errors are surfaced via nfcError
     setScreenState('verified');
   }
 
@@ -76,7 +78,7 @@ export default function TagScreen() {
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         <Text style={styles.heading}>Tag a Bike</Text>
         <Text style={styles.subheading}>
-          Enter the bike's BikeIndex.org ID to write it to an NFC sticker.
+          Register a new bike and write its ID to an NFC sticker, or tag an existing BikeIndex bike.
         </Text>
 
         {showNfcStatus && (
@@ -87,6 +89,19 @@ export default function TagScreen() {
             error={nfcError}
           />
         )}
+
+        <TouchableOpacity
+          style={styles.registerButton}
+          onPress={() => router.push('/register-bike?source=tag')}
+        >
+          <Text style={styles.registerButtonText}>+ Register New Bike</Text>
+        </TouchableOpacity>
+
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>or tag by BikeIndex ID</Text>
+          <View style={styles.dividerLine} />
+        </View>
 
         <View style={styles.inputRow}>
           <TextInput
@@ -165,6 +180,39 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     lineHeight: 22,
   },
+  registerButton: {
+    backgroundColor: '#2563eb',
+    borderRadius: 14,
+    paddingVertical: 18,
+    alignItems: 'center',
+    marginBottom: 24,
+    shadowColor: '#2563eb',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  registerButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    gap: 8,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#d1d5db',
+  },
+  dividerText: {
+    fontSize: 13,
+    color: '#9ca3af',
+    fontWeight: '500',
+  },
   inputRow: {
     flexDirection: 'row',
     gap: 10,
@@ -182,7 +230,7 @@ const styles = StyleSheet.create({
     color: '#111827',
   },
   verifyButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#6b7280',
     borderRadius: 10,
     paddingHorizontal: 18,
     justifyContent: 'center',

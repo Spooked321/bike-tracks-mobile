@@ -7,12 +7,16 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useNFC } from '../../hooks/useNFC';
 import { getBikeById, BikeNotFoundError } from '../../api/bikeindex';
+import { getBikeByBtId, BtBikeNotFoundError } from '../../api/bikes';
 import { BikeCard } from '../../components/BikeCard';
+import { OurBikeCard } from '../../components/OurBikeCard';
 import { StolenAlert } from '../../components/StolenAlert';
 import { NFCStatus } from '../../components/NFCStatus';
 import type { BikeDetail } from '../../types/bike';
+import type { OurBike } from '../../api/bikes';
 
 type ScreenState =
   | 'idle'
@@ -24,33 +28,71 @@ type ScreenState =
   | 'error';
 
 export default function ScanScreen() {
-  const { isSupported, isEnabled, state: nfcState, error: nfcError, scannedId, startScan, stopScan } = useNFC();
+  const router = useRouter();
+  const { isSupported, isEnabled, state: nfcState, error: nfcError, scannedTag, startScan, stopScan } = useNFC();
   const [screenState, setScreenState] = useState<ScreenState>('idle');
   const [bike, setBike] = useState<BikeDetail | null>(null);
+  const [ourBike, setOurBike] = useState<OurBike | null>(null);
   const [lookupError, setLookupError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (scannedId == null) return;
+    if (scannedTag == null) return;
 
-    setScreenState('looking_up');
-    setBike(null);
-    setLookupError(null);
+    switch (scannedTag.type) {
+      case 'blank':
+        router.push('/register-bike?source=scan');
+        break;
 
-    getBikeById(scannedId)
-      .then((result) => {
-        setBike(result);
-        setScreenState(result.stolen ? 'found_stolen' : 'found_safe');
-      })
-      .catch((err) => {
-        if (err instanceof BikeNotFoundError) {
-          setScreenState('not_found');
-          setLookupError(`No bike found with ID ${scannedId} on BikeIndex.`);
-        } else {
-          setScreenState('error');
-          setLookupError(err instanceof Error ? err.message : 'Lookup failed');
-        }
-      });
-  }, [scannedId]);
+      case 'bt': {
+        setScreenState('looking_up');
+        setBike(null);
+        setOurBike(null);
+        setLookupError(null);
+        getBikeByBtId(scannedTag.id)
+          .then((result) => {
+            setOurBike(result);
+            setScreenState(result.status === 'stolen' ? 'found_stolen' : 'found_safe');
+          })
+          .catch((err) => {
+            if (err instanceof BtBikeNotFoundError) {
+              setScreenState('not_found');
+              setLookupError(`No bike found with ID ${scannedTag.id}.`);
+            } else {
+              setScreenState('error');
+              setLookupError(err instanceof Error ? err.message : 'Lookup failed');
+            }
+          });
+        break;
+      }
+
+      case 'bikeindex': {
+        setScreenState('looking_up');
+        setBike(null);
+        setOurBike(null);
+        setLookupError(null);
+        getBikeById(scannedTag.id)
+          .then((result) => {
+            setBike(result);
+            setScreenState(result.stolen ? 'found_stolen' : 'found_safe');
+          })
+          .catch((err) => {
+            if (err instanceof BikeNotFoundError) {
+              setScreenState('not_found');
+              setLookupError(`No bike found with ID ${scannedTag.id} on BikeIndex.`);
+            } else {
+              setScreenState('error');
+              setLookupError(err instanceof Error ? err.message : 'Lookup failed');
+            }
+          });
+        break;
+      }
+
+      case 'unknown':
+        setScreenState('error');
+        setLookupError(`Unrecognized tag format: "${scannedTag.raw}"`);
+        break;
+    }
+  }, [scannedTag]);
 
   useEffect(() => {
     if (nfcState === 'error') setScreenState('error');
@@ -59,6 +101,7 @@ export default function ScanScreen() {
   function handleScan() {
     setScreenState('scanning');
     setBike(null);
+    setOurBike(null);
     setLookupError(null);
     startScan();
   }
@@ -67,6 +110,7 @@ export default function ScanScreen() {
     stopScan();
     setScreenState('idle');
     setBike(null);
+    setOurBike(null);
     setLookupError(null);
   }
 
@@ -76,11 +120,15 @@ export default function ScanScreen() {
     !isSupported ||
     !isEnabled;
 
+  const lookupId = scannedTag?.type === 'bikeindex' ? scannedTag.id
+    : scannedTag?.type === 'bt' ? scannedTag.id
+    : null;
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.heading}>Scan a Bike Tag</Text>
       <Text style={styles.subheading}>
-        Tap an NFC tag on a bike to look it up on BikeIndex.org
+        Tap an NFC tag on a bike to look it up
       </Text>
 
       {showNfcStatus && (
@@ -95,27 +143,41 @@ export default function ScanScreen() {
       {screenState === 'looking_up' && (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color="#2563eb" />
-          <Text style={styles.lookupText}>Looking up bike #{scannedId}…</Text>
+          <Text style={styles.lookupText}>Looking up bike {lookupId}…</Text>
         </View>
       )}
 
-      {screenState === 'found_stolen' && bike && (
-        <StolenAlert bike={bike} />
+      {screenState === 'found_stolen' && (bike || ourBike) && (
+        bike ? <StolenAlert bike={bike} /> : (
+          <View style={styles.stolenHeader}>
+            <Text style={styles.stolenIcon}>🚨</Text>
+            <Text style={styles.stolenText}>This bike is reported stolen!</Text>
+            {ourBike && <OurBikeCard bike={ourBike} />}
+          </View>
+        )
       )}
 
-      {screenState === 'found_safe' && bike && (
+      {screenState === 'found_safe' && (bike || ourBike) && (
         <>
           <View style={styles.safeHeader}>
             <Text style={styles.safeIcon}>✅</Text>
             <Text style={styles.safeText}>This bike is not reported stolen</Text>
           </View>
-          <BikeCard bike={bike} />
+          {bike ? <BikeCard bike={bike} /> : ourBike ? <OurBikeCard bike={ourBike} /> : null}
         </>
       )}
 
       {(screenState === 'not_found' || screenState === 'error') && lookupError && (
         <View style={styles.errorBox}>
           <Text style={styles.errorText}>⚠️ {lookupError}</Text>
+          {screenState === 'not_found' && (
+            <TouchableOpacity
+              style={styles.registerLink}
+              onPress={() => router.push('/register-bike?source=scan')}
+            >
+              <Text style={styles.registerLinkText}>Register This Bike</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
 
@@ -180,6 +242,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#16a34a',
   },
+  stolenHeader: {
+    marginBottom: 8,
+  },
+  stolenIcon: {
+    fontSize: 24,
+  },
+  stolenText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#dc2626',
+    marginBottom: 8,
+    paddingHorizontal: 16,
+  },
   errorBox: {
     backgroundColor: '#fef2f2',
     borderColor: '#fca5a5',
@@ -192,6 +267,16 @@ const styles = StyleSheet.create({
     color: '#dc2626',
     fontSize: 14,
     lineHeight: 20,
+  },
+  registerLink: {
+    marginTop: 10,
+    alignSelf: 'flex-start',
+  },
+  registerLinkText: {
+    color: '#2563eb',
+    fontSize: 14,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
   },
   scanButton: {
     backgroundColor: '#2563eb',

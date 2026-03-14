@@ -20,15 +20,21 @@ export type NFCState =
   | 'writing'
   | 'error';
 
+export type ScannedTag =
+  | { type: 'blank' }
+  | { type: 'bt'; id: string }
+  | { type: 'bikeindex'; id: number }
+  | { type: 'unknown'; raw: string };
+
 export interface UseNFCReturn {
   isSupported: boolean;
   isEnabled: boolean;
   state: NFCState;
   error: string | null;
-  scannedId: number | null;
+  scannedTag: ScannedTag | null;
   startScan: () => Promise<void>;
   stopScan: () => Promise<void>;
-  writeId: (bikeId: number) => Promise<void>;
+  writeTag: (payload: string) => Promise<void>;
 }
 
 export function useNFC(): UseNFCReturn {
@@ -36,7 +42,7 @@ export function useNFC(): UseNFCReturn {
   const [isEnabled, setIsEnabled] = useState(false);
   const [state, setState] = useState<NFCState>('idle');
   const [error, setError] = useState<string | null>(null);
-  const [scannedId, setScannedId] = useState<number | null>(null);
+  const [scannedTag, setScannedTag] = useState<ScannedTag | null>(null);
 
   useEffect(() => {
     if (Platform.OS === 'web' || !NfcManager) return;
@@ -77,7 +83,7 @@ export function useNFC(): UseNFCReturn {
     }
 
     setError(null);
-    setScannedId(null);
+    setScannedTag(null);
     setState('scanning');
 
     try {
@@ -86,20 +92,24 @@ export function useNFC(): UseNFCReturn {
       const ndefRecords = tag?.ndefMessage;
 
       if (!ndefRecords || ndefRecords.length === 0) {
-        throw new Error('No NDEF records found on tag');
+        setScannedTag({ type: 'blank' });
+        setState('idle');
+        return;
       }
 
       const firstRecord = ndefRecords[0];
       const decoded = Ndef.text.decodePayload(
         new Uint8Array(firstRecord.payload)
       );
-      const bikeId = parseInt(decoded, 10);
 
-      if (isNaN(bikeId)) {
-        throw new Error(`Tag does not contain a valid bike ID: "${decoded}"`);
+      if (decoded.startsWith('bt:')) {
+        setScannedTag({ type: 'bt', id: decoded });
+      } else if (!isNaN(parseInt(decoded, 10))) {
+        setScannedTag({ type: 'bikeindex', id: parseInt(decoded, 10) });
+      } else {
+        setScannedTag({ type: 'unknown', raw: decoded });
       }
 
-      setScannedId(bikeId);
       setState('idle');
     } catch (err) {
       const message =
@@ -117,7 +127,7 @@ export function useNFC(): UseNFCReturn {
     setError(null);
   }, []);
 
-  const writeId = useCallback(async (bikeId: number) => {
+  const writeTag = useCallback(async (payload: string) => {
     if (!NfcManager || !NfcTech || !Ndef) {
       setError('NFC is not available on this device');
       setState('error');
@@ -129,10 +139,10 @@ export function useNFC(): UseNFCReturn {
 
     try {
       await NfcManager.requestTechnology(NfcTech.Ndef);
-      const bytes = Ndef.encodeMessage([Ndef.textRecord(String(bikeId))]);
+      const bytes = Ndef.encodeMessage([Ndef.textRecord(payload)]);
       await NfcManager.ndefHandler.writeNdefMessage(bytes);
       setState('idle');
-      Alert.alert('Success', `Bike ID ${bikeId} written to NFC tag`);
+      Alert.alert('Success', `Tag written successfully`);
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to write NFC tag';
@@ -148,9 +158,9 @@ export function useNFC(): UseNFCReturn {
     isEnabled,
     state,
     error,
-    scannedId,
+    scannedTag,
     startScan,
     stopScan,
-    writeId,
+    writeTag,
   };
 }
