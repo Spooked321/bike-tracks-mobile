@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useNFC } from '../hooks/useNFC';
 import { NFCStatus } from '../components/NFCStatus';
 import { registerBike } from '../api/bikes';
@@ -95,7 +96,7 @@ export default function RegisterBikeScreen() {
   if (screenState === 'submitting') {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#2563eb" />
+        <ActivityIndicator size="large" color="#FF6B00" />
         <Text style={styles.statusText}>Registering your bike…</Text>
       </View>
     );
@@ -117,7 +118,7 @@ export default function RegisterBikeScreen() {
           disabled={nfcState === 'writing'}
         >
           {nfcState === 'writing' ? (
-            <ActivityIndicator color="#fff" size="small" />
+            <ActivityIndicator color="#FAFAFA" size="small" />
           ) : (
             <Text style={styles.primaryButtonText}>🏷️ Write to NFC Tag</Text>
           )}
@@ -132,7 +133,7 @@ export default function RegisterBikeScreen() {
   if (screenState === 'registered') {
     return (
       <View style={styles.centered}>
-        <Text style={styles.successIcon}>✅</Text>
+        <Ionicons name="checkmark-circle" size={56} color="#00D4FF" />
         <Text style={styles.successTitle}>Bike Registered!</Text>
         <Text style={styles.idLabel}>Your bike ID:</Text>
         <Text style={styles.idValue}>{registeredBike?.id}</Text>
@@ -147,7 +148,7 @@ export default function RegisterBikeScreen() {
   if (screenState === 'done') {
     return (
       <View style={styles.centered}>
-        <Text style={styles.successIcon}>🎉</Text>
+        <Ionicons name="ribbon" size={56} color="#FF6B00" />
         <Text style={styles.successTitle}>All done!</Text>
         <Text style={styles.successSub}>Your bike has been registered{registeredBike ? ` as ${registeredBike.id}` : ''}.</Text>
         <TouchableOpacity style={styles.primaryButton} onPress={() => router.replace('/')}>
@@ -189,19 +190,19 @@ export default function RegisterBikeScreen() {
         )}
 
         <Text style={styles.label}>Make *</Text>
-        <TextInput style={styles.input} value={make} onChangeText={setMake} placeholder="e.g. Trek" returnKeyType="next" />
+        <TextInput style={styles.input} value={make} onChangeText={setMake} placeholder="e.g. Trek" placeholderTextColor="#333333" returnKeyType="next" />
 
         <Text style={styles.label}>Model *</Text>
-        <TextInput style={styles.input} value={model} onChangeText={setModel} placeholder="e.g. Marlin 5" returnKeyType="next" />
+        <TextInput style={styles.input} value={model} onChangeText={setModel} placeholder="e.g. Marlin 5" placeholderTextColor="#333333" returnKeyType="next" />
 
         <Text style={styles.label}>Serial Number *</Text>
-        <TextInput style={styles.input} value={serial} onChangeText={setSerial} placeholder="Found under the bottom bracket" autoCapitalize="characters" returnKeyType="next" />
+        <TextInput style={styles.input} value={serial} onChangeText={setSerial} placeholder="Found under the bottom bracket" placeholderTextColor="#333333" autoCapitalize="characters" returnKeyType="next" />
 
         <Text style={styles.label}>Color *</Text>
-        <TextInput style={styles.input} value={color} onChangeText={setColor} placeholder="e.g. Blue" returnKeyType="next" />
+        <TextInput style={styles.input} value={color} onChangeText={setColor} placeholder="e.g. Blue" placeholderTextColor="#333333" returnKeyType="next" />
 
         <Text style={styles.label}>Year</Text>
-        <TextInput style={styles.input} value={year} onChangeText={setYear} placeholder={`e.g. ${CURRENT_YEAR}`} keyboardType="numeric" returnKeyType="done" />
+        <TextInput style={styles.input} value={year} onChangeText={setYear} placeholder={`e.g. ${CURRENT_YEAR}`} placeholderTextColor="#333333" keyboardType="numeric" returnKeyType="done" />
 
         <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit}>
           <Text style={styles.primaryButtonText}>Register Bike</Text>
@@ -214,7 +215,7 @@ export default function RegisterBikeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#0F0F0F',
   },
   content: {
     padding: 16,
@@ -223,55 +224,51 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 26,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FAFAFA',
     marginTop: 16,
     marginBottom: 6,
   },
   subheading: {
     fontSize: 15,
-    color: '#6b7280',
+    color: '#888888',
     marginBottom: 24,
     lineHeight: 22,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
+    fontSize: 12,
+    color: '#888888',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
     marginBottom: 6,
     marginTop: 12,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1A1A1A',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: '#2A2A2A',
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#111827',
+    color: '#FAFAFA',
   },
   primaryButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#FF6B00',
     borderRadius: 14,
     paddingVertical: 18,
     alignItems: 'center',
     marginTop: 24,
-    shadowColor: '#2563eb',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
   },
   primaryButtonText: {
-    color: '#fff',
+    color: '#FAFAFA',
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'BarlowCondensed_700Bold',
   },
   buttonDisabled: {
     opacity: 0.6,
   },
   secondaryButton: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#1A1A1A',
     borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
@@ -280,13 +277,13 @@ const styles = StyleSheet.create({
     maxWidth: 320,
   },
   secondaryButtonText: {
-    color: '#374151',
+    color: '#888888',
     fontSize: 16,
     fontWeight: '600',
   },
   errorBox: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fca5a5',
+    backgroundColor: '#1A0000',
+    borderColor: '#3A0000',
     borderWidth: 1,
     borderRadius: 10,
     padding: 14,
@@ -302,52 +299,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 32,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#0F0F0F',
   },
   statusText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#6b7280',
+    color: '#888888',
   },
   nfcPrompt: {
     fontSize: 16,
-    color: '#374151',
+    color: '#FAFAFA',
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
   },
-  successIcon: {
-    fontSize: 56,
-    marginBottom: 16,
-  },
   successTitle: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FAFAFA',
     marginBottom: 12,
+    marginTop: 16,
   },
   successSub: {
     fontSize: 15,
-    color: '#6b7280',
+    color: '#888888',
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 22,
   },
   idLabel: {
     fontSize: 14,
-    color: '#6b7280',
+    color: '#888888',
     marginBottom: 4,
   },
   idValue: {
     fontSize: 14,
-    fontWeight: '700',
-    color: '#111827',
-    fontFamily: 'monospace' as const,
+    fontFamily: 'SpaceMono_400Regular',
+    color: '#00D4FF',
     marginBottom: 16,
   },
   nfcNote: {
     fontSize: 14,
-    color: '#9ca3af',
+    color: '#888888',
     textAlign: 'center',
     marginBottom: 24,
   },
