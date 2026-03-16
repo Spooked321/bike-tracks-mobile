@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import type { BikeDetail } from '../types/bike';
 
 interface Props {
@@ -24,80 +25,91 @@ export function StolenAlert({ bike }: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.alertIcon}>🚨</Text>
-        <Text style={styles.alertTitle}>STOLEN BIKE</Text>
+      <View style={styles.banner}>
+        <Ionicons name="warning" size={20} color="#0F0F0F" />
+        <Text style={styles.bannerText}>STOLEN BIKE</Text>
       </View>
 
-      <Text style={styles.bikeTitle}>{bike.title}</Text>
+      <View style={styles.body}>
+        <Text style={styles.bikeTitle}>{bike.title}</Text>
 
-      {bike.serial && (
-        <Text style={styles.detail}>Serial: {bike.serial}</Text>
-      )}
+        {bike.serial && (
+          <Text style={styles.detail}>Serial: {bike.serial}</Text>
+        )}
 
-      <View style={styles.divider} />
+        <View style={styles.divider} />
 
-      <Text style={styles.sectionLabel}>Theft details</Text>
-      <Text style={styles.detail}>
-        Date stolen: {formatDate(bike.date_stolen)}
-      </Text>
-      <Text style={styles.detail}>Location: {location}</Text>
-
-      {record?.theft_description && (
-        <Text style={styles.description}>{record.theft_description}</Text>
-      )}
-
-      {record?.police_report_number && (
+        <Text style={styles.sectionLabel}>Theft details</Text>
         <Text style={styles.detail}>
-          Police report: {record.police_report_number}
+          Date stolen: <Text style={styles.detailValue}>{formatDate(bike.date_stolen)}</Text>
         </Text>
-      )}
+        <Text style={styles.detail}>
+          Location: <Text style={styles.detailValue}>{location}</Text>
+        </Text>
 
-      <TouchableOpacity style={styles.alertButton} onPress={handleAlertOwner}>
-        <Text style={styles.alertButtonText}>Alert Owner</Text>
-      </TouchableOpacity>
+        {record?.theft_description && (
+          <Text style={styles.description}>{record.theft_description}</Text>
+        )}
+
+        {record?.police_report_number && (
+          <Text style={styles.detail}>
+            Police report: <Text style={styles.detailValue}>{record.police_report_number}</Text>
+          </Text>
+        )}
+
+        <TouchableOpacity style={styles.alertButton} onPress={handleAlertOwner}>
+          <Text style={styles.alertButtonText}>Alert Owner</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#ef4444',
+    backgroundColor: '#4A0A0A',
     borderWidth: 2,
-    borderRadius: 16,
-    padding: 20,
+    borderColor: '#FF3131',
+    borderRadius: 14,
     margin: 16,
+    overflow: 'hidden',
   },
-  header: {
+  banner: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    backgroundColor: '#FF3131',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     gap: 8,
   },
-  alertIcon: {
-    fontSize: 28,
-  },
-  alertTitle: {
-    fontSize: 24,
-    fontWeight: '900',
-    color: '#dc2626',
+  bannerText: {
+    fontFamily: 'BarlowCondensed_700Bold',
+    fontSize: 22,
+    color: '#0F0F0F',
     letterSpacing: 1,
   },
+  body: {
+    padding: 20,
+  },
   bikeTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#111827',
+    fontFamily: 'BarlowCondensed_700Bold',
+    fontSize: 20,
+    color: '#FAFAFA',
     marginBottom: 8,
   },
   detail: {
     fontSize: 14,
-    color: '#374151',
+    color: '#FAFAFA',
     marginBottom: 6,
+  },
+  detailValue: {
+    fontFamily: 'SpaceMono_400Regular',
+    color: '#FF6B00',
+    fontSize: 13,
   },
   divider: {
     height: 1,
-    backgroundColor: '#fca5a5',
+    backgroundColor: '#7A1A1A',
     marginVertical: 12,
   },
   sectionLabel: {
@@ -109,21 +121,22 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   description: {
-    fontSize: 14,
-    color: '#374151',
+    fontFamily: 'SpaceMono_400Regular',
+    fontSize: 13,
+    color: '#FF6B00',
     fontStyle: 'italic',
     marginVertical: 8,
     lineHeight: 20,
   },
   alertButton: {
-    backgroundColor: '#dc2626',
-    borderRadius: 10,
+    backgroundColor: '#FF3131',
+    borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 16,
   },
   alertButtonText: {
-    color: '#fff',
+    color: '#0F0F0F',
     fontSize: 16,
     fontWeight: '700',
   },
