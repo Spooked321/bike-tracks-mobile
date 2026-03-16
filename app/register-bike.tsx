@@ -120,7 +120,7 @@ export default function RegisterBikeScreen() {
           {nfcState === 'writing' ? (
             <ActivityIndicator color="#FAFAFA" size="small" />
           ) : (
-            <Text style={styles.primaryButtonText}>🏷️ Write to NFC Tag</Text>
+            <Text style={styles.primaryButtonText}>Write to NFC Tag</Text>
           )}
         </TouchableOpacity>
         <TouchableOpacity style={styles.secondaryButton} onPress={handleSkip}>
