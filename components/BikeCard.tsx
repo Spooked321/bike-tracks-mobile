@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import type { BikeListItem } from '../types/bike';
 
 interface Props {
@@ -13,32 +14,35 @@ function formatDate(timestamp: number | null): string {
 
 export function BikeCard({ bike }: Props) {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, bike.stolen ? styles.cardStolen : styles.cardSafe]}>
       {bike.thumb ? (
         <Image source={{ uri: bike.thumb }} style={styles.image} />
       ) : (
         <View style={styles.imagePlaceholder}>
-          <Text style={styles.imagePlaceholderText}>No photo</Text>
+          <Ionicons name="bicycle" size={40} color="#555555" />
         </View>
       )}
       <View style={styles.info}>
         <Text style={styles.title}>{bike.title}</Text>
         {bike.manufacturer_name && (
-          <Text style={styles.detail}>Brand: {bike.manufacturer_name}</Text>
+          <Text style={styles.detail}>Brand: <Text style={styles.detailValue}>{bike.manufacturer_name}</Text></Text>
         )}
         {bike.year && (
-          <Text style={styles.detail}>Year: {bike.year}</Text>
+          <Text style={styles.detail}>Year: <Text style={styles.detailValue}>{bike.year}</Text></Text>
         )}
         {bike.serial && (
-          <Text style={styles.detail}>Serial: {bike.serial}</Text>
+          <Text style={styles.detail}>
+            <Text style={styles.detailLabel}>Serial: </Text>
+            <Text style={styles.serial}>{bike.serial}</Text>
+          </Text>
         )}
         {bike.frame_colors.length > 0 && (
           <Text style={styles.detail}>
-            Color: {bike.frame_colors.join(', ')}
+            Color: <Text style={styles.detailValue}>{bike.frame_colors.join(', ')}</Text>
           </Text>
         )}
         <View style={[styles.statusBadge, bike.stolen ? styles.stolenBadge : styles.safeBadge]}>
-          <Text style={styles.statusText}>
+          <Text style={[styles.statusText, bike.stolen ? styles.stolenText : styles.safeText]}>
             {bike.stolen ? 'STOLEN' : bike.status.toUpperCase()}
           </Text>
         </View>
@@ -49,7 +53,7 @@ export function BikeCard({ bike }: Props) {
         )}
         {bike.stolen && bike.date_stolen && (
           <Text style={styles.detail}>
-            Stolen: {formatDate(bike.date_stolen)}
+            Stolen: <Text style={styles.detailValue}>{formatDate(bike.date_stolen)}</Text>
           </Text>
         )}
       </View>
@@ -59,16 +63,18 @@ export function BikeCard({ bike }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
+    backgroundColor: '#1A1A1A',
+    borderRadius: 14,
     marginVertical: 8,
     marginHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderLeftWidth: 3,
     overflow: 'hidden',
+  },
+  cardSafe: {
+    borderLeftColor: '#00D4FF',
+  },
+  cardStolen: {
+    borderLeftColor: '#FF3131',
   },
   image: {
     width: '100%',
@@ -78,49 +84,61 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: '100%',
     height: 120,
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#222222',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  imagePlaceholderText: {
-    color: '#9ca3af',
-    fontSize: 14,
   },
   info: {
     padding: 16,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#111827',
+    fontFamily: 'BarlowCondensed_700Bold',
+    fontSize: 20,
+    color: '#FAFAFA',
     marginBottom: 8,
   },
   detail: {
     fontSize: 14,
-    color: '#6b7280',
+    color: '#888888',
     marginBottom: 4,
+  },
+  detailLabel: {
+    color: '#888888',
+  },
+  detailValue: {
+    color: '#888888',
+  },
+  serial: {
+    fontFamily: 'SpaceMono_400Regular',
+    fontSize: 13,
+    color: '#FAFAFA',
   },
   statusBadge: {
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 20,
+    borderRadius: 4,
     marginVertical: 8,
   },
   safeBadge: {
-    backgroundColor: '#d1fae5',
+    backgroundColor: '#003A45',
   },
   stolenBadge: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: '#4A0A0A',
   },
   statusText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#374151',
+  },
+  safeText: {
+    color: '#00D4FF',
+  },
+  stolenText: {
+    color: '#FF3131',
   },
   stolenLocation: {
     fontSize: 13,
-    color: '#ef4444',
+    color: '#888888',
     marginBottom: 4,
   },
 });
