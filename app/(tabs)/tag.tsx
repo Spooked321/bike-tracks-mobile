@@ -109,6 +109,7 @@ export default function TagScreen() {
             value={bikeIdInput}
             onChangeText={setBikeIdInput}
             placeholder="BikeIndex bike ID (e.g. 3350313)"
+            placeholderTextColor="#555555"
             keyboardType="numeric"
             editable={screenState !== 'verifying' && screenState !== 'writing'}
             returnKeyType="done"
@@ -120,7 +121,7 @@ export default function TagScreen() {
             disabled={screenState === 'verifying'}
           >
             {screenState === 'verifying' ? (
-              <ActivityIndicator color="#fff" size="small" />
+              <ActivityIndicator color="#FF6B00" size="small" />
             ) : (
               <Text style={styles.verifyButtonText}>Verify</Text>
             )}
@@ -129,7 +130,7 @@ export default function TagScreen() {
 
         {screenState === 'error' && error && (
           <View style={styles.errorBox}>
-            <Text style={styles.errorText}>⚠️ {error}</Text>
+            <Text style={styles.errorText}>{error}</Text>
           </View>
         )}
 
@@ -144,7 +145,7 @@ export default function TagScreen() {
                 onPress={handleWrite}
                 disabled={nfcState === 'writing'}
               >
-                <Text style={styles.writeButtonText}>🏷️ Write to NFC Tag</Text>
+                <Text style={styles.writeButtonText}>Write to NFC Tag</Text>
               </TouchableOpacity>
             )}
 
@@ -161,7 +162,7 @@ export default function TagScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#0F0F0F',
   },
   content: {
     padding: 16,
@@ -169,33 +170,28 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: '800',
-    color: '#111827',
+    fontFamily: 'BarlowCondensed_700Bold',
+    color: '#FAFAFA',
     marginTop: 16,
     marginBottom: 6,
   },
   subheading: {
     fontSize: 15,
-    color: '#6b7280',
+    color: '#888888',
     marginBottom: 24,
     lineHeight: 22,
   },
   registerButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#FF6B00',
     borderRadius: 14,
     paddingVertical: 18,
     alignItems: 'center',
     marginBottom: 24,
-    shadowColor: '#2563eb',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
   },
   registerButtonText: {
-    color: '#fff',
+    color: '#FAFAFA',
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'BarlowCondensed_700Bold',
   },
   divider: {
     flexDirection: 'row',
@@ -206,11 +202,11 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#d1d5db',
+    backgroundColor: '#2A2A2A',
   },
   dividerText: {
     fontSize: 13,
-    color: '#9ca3af',
+    color: '#555555',
     fontWeight: '500',
   },
   inputRow: {
@@ -220,17 +216,17 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#1A1A1A',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: '#2A2A2A',
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#111827',
+    color: '#FAFAFA',
   },
   verifyButton: {
-    backgroundColor: '#6b7280',
+    backgroundColor: '#888888',
     borderRadius: 10,
     paddingHorizontal: 18,
     justifyContent: 'center',
@@ -241,51 +237,48 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   verifyButtonText: {
-    color: '#fff',
+    color: '#FAFAFA',
     fontSize: 15,
     fontWeight: '700',
   },
   errorBox: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fca5a5',
-    borderWidth: 1,
+    backgroundColor: '#1A1A1A',
+    borderLeftWidth: 3,
+    borderLeftColor: '#FF3131',
     borderRadius: 10,
     padding: 14,
     marginTop: 8,
   },
   errorText: {
-    color: '#dc2626',
+    color: '#FF3131',
     fontSize: 14,
     lineHeight: 20,
   },
   confirmedLabel: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#16a34a',
+    color: '#00D4FF',
     marginTop: 16,
     marginBottom: 4,
     paddingHorizontal: 4,
   },
   writeButton: {
-    backgroundColor: '#16a34a',
+    backgroundColor: '#FF6B00',
     borderRadius: 14,
     paddingVertical: 18,
     alignItems: 'center',
     marginTop: 8,
     marginHorizontal: 16,
-    shadowColor: '#16a34a',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
   },
   writeButtonText: {
-    color: '#fff',
+    color: '#FAFAFA',
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'BarlowCondensed_700Bold',
   },
   resetButton: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
     borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
@@ -293,7 +286,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   resetButtonText: {
-    color: '#374151',
+    color: '#888888',
     fontSize: 16,
     fontWeight: '600',
   },

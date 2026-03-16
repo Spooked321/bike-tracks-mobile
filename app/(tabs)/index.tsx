@@ -142,7 +142,7 @@ export default function ScanScreen() {
 
       {screenState === 'looking_up' && (
         <View style={styles.centered}>
-          <ActivityIndicator size="large" color="#2563eb" />
+          <ActivityIndicator size="large" color="#FF6B00" />
           <Text style={styles.lookupText}>Looking up bike {lookupId}…</Text>
         </View>
       )}
@@ -150,7 +150,6 @@ export default function ScanScreen() {
       {screenState === 'found_stolen' && (bike || ourBike) && (
         bike ? <StolenAlert bike={bike} /> : (
           <View style={styles.stolenHeader}>
-            <Text style={styles.stolenIcon}>🚨</Text>
             <Text style={styles.stolenText}>This bike is reported stolen!</Text>
             {ourBike && <OurBikeCard bike={ourBike} />}
           </View>
@@ -160,7 +159,6 @@ export default function ScanScreen() {
       {screenState === 'found_safe' && (bike || ourBike) && (
         <>
           <View style={styles.safeHeader}>
-            <Text style={styles.safeIcon}>✅</Text>
             <Text style={styles.safeText}>This bike is not reported stolen</Text>
           </View>
           {bike ? <BikeCard bike={bike} /> : ourBike ? <OurBikeCard bike={ourBike} /> : null}
@@ -169,7 +167,7 @@ export default function ScanScreen() {
 
       {(screenState === 'not_found' || screenState === 'error') && lookupError && (
         <View style={styles.errorBox}>
-          <Text style={styles.errorText}>⚠️ {lookupError}</Text>
+          <Text style={styles.errorText}>{lookupError}</Text>
           {screenState === 'not_found' && (
             <TouchableOpacity
               style={styles.registerLink}
@@ -183,7 +181,7 @@ export default function ScanScreen() {
 
       {screenState === 'idle' && isSupported && isEnabled && (
         <TouchableOpacity style={styles.scanButton} onPress={handleScan}>
-          <Text style={styles.scanButtonText}>📡 Tap NFC Tag</Text>
+          <Text style={styles.scanButtonText}>Tap NFC Tag</Text>
         </TouchableOpacity>
       )}
 
@@ -199,7 +197,7 @@ export default function ScanScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#0F0F0F',
   },
   content: {
     padding: 16,
@@ -207,14 +205,14 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: '800',
-    color: '#111827',
+    fontFamily: 'BarlowCondensed_700Bold',
+    color: '#FAFAFA',
     marginTop: 16,
     marginBottom: 6,
   },
   subheading: {
     fontSize: 15,
-    color: '#6b7280',
+    color: '#888888',
     marginBottom: 24,
     lineHeight: 22,
   },
@@ -225,7 +223,7 @@ const styles = StyleSheet.create({
   lookupText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#6b7280',
+    color: '#888888',
   },
   safeHeader: {
     flexDirection: 'row',
@@ -234,37 +232,31 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingHorizontal: 16,
   },
-  safeIcon: {
-    fontSize: 24,
-  },
   safeText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#16a34a',
+    color: '#00D4FF',
   },
   stolenHeader: {
     marginBottom: 8,
   },
-  stolenIcon: {
-    fontSize: 24,
-  },
   stolenText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#dc2626',
+    color: '#FF3131',
     marginBottom: 8,
     paddingHorizontal: 16,
   },
   errorBox: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fca5a5',
-    borderWidth: 1,
+    backgroundColor: '#1A1A1A',
+    borderLeftWidth: 3,
+    borderLeftColor: '#FF3131',
     borderRadius: 10,
     padding: 16,
     marginVertical: 16,
   },
   errorText: {
-    color: '#dc2626',
+    color: '#FF3131',
     fontSize: 14,
     lineHeight: 20,
   },
@@ -273,37 +265,34 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   registerLinkText: {
-    color: '#2563eb',
+    color: '#FF6B00',
     fontSize: 14,
     fontWeight: '600',
     textDecorationLine: 'underline',
   },
   scanButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#FF6B00',
     borderRadius: 14,
     paddingVertical: 18,
     alignItems: 'center',
     marginTop: 32,
-    shadowColor: '#2563eb',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
   },
   scanButtonText: {
-    color: '#fff',
+    color: '#FAFAFA',
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'BarlowCondensed_700Bold',
   },
   resetButton: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
     borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 16,
   },
   resetButtonText: {
-    color: '#374151',
+    color: '#888888',
     fontSize: 16,
     fontWeight: '600',
   },

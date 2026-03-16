@@ -63,6 +63,7 @@ export default function SearchScreen() {
               value={query}
               onChangeText={setQuery}
               placeholder="Serial number (e.g. WTU123456)"
+              placeholderTextColor="#555555"
               autoCapitalize="characters"
               returnKeyType="search"
               onSubmitEditing={handleSearch}
@@ -85,15 +86,15 @@ export default function SearchScreen() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color="#FF6B00" />
               ) : (
-                <Text style={styles.searchButtonText}>🔍 Search</Text>
+                <Text style={styles.searchButtonText}>Search</Text>
               )}
             </TouchableOpacity>
 
             {error && (
               <View style={styles.errorBox}>
-                <Text style={styles.errorText}>⚠️ {error}</Text>
+                <Text style={styles.errorText}>{error}</Text>
               </View>
             )}
 
@@ -121,7 +122,7 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#0F0F0F',
   },
   listContent: {
     paddingBottom: 40,
@@ -131,26 +132,26 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: '800',
-    color: '#111827',
+    fontFamily: 'BarlowCondensed_700Bold',
+    color: '#FAFAFA',
     marginTop: 16,
     marginBottom: 6,
   },
   subheading: {
     fontSize: 15,
-    color: '#6b7280',
+    color: '#888888',
     marginBottom: 20,
     lineHeight: 22,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1A1A1A',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: '#2A2A2A',
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#111827',
+    color: '#FAFAFA',
     marginBottom: 12,
   },
   toggleRow: {
@@ -164,48 +165,48 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: '#d1d5db',
+    borderColor: '#2A2A2A',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
   },
   checkboxActive: {
-    backgroundColor: '#2563eb',
-    borderColor: '#2563eb',
+    backgroundColor: '#FF6B00',
+    borderColor: '#FF6B00',
   },
   checkmark: {
-    color: '#fff',
+    color: '#FAFAFA',
     fontSize: 13,
     fontWeight: '700',
   },
   toggleLabel: {
     fontSize: 15,
-    color: '#374151',
+    color: '#888888',
   },
   searchButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#FF6B00',
     borderRadius: 14,
-    paddingVertical: 16,
+    paddingVertical: 18,
     alignItems: 'center',
   },
   buttonDisabled: {
     opacity: 0.6,
   },
   searchButtonText: {
-    color: '#fff',
-    fontSize: 17,
-    fontWeight: '700',
+    color: '#FAFAFA',
+    fontSize: 18,
+    fontFamily: 'BarlowCondensed_700Bold',
   },
   errorBox: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fca5a5',
-    borderWidth: 1,
+    backgroundColor: '#1A1A1A',
+    borderLeftWidth: 3,
+    borderLeftColor: '#FF3131',
     borderRadius: 10,
     padding: 14,
     marginTop: 16,
   },
   errorText: {
-    color: '#dc2626',
+    color: '#FF3131',
     fontSize: 14,
   },
   emptyBox: {
@@ -213,14 +214,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyText: {
-    color: '#9ca3af',
+    color: '#555555',
     fontSize: 15,
     textAlign: 'center',
   },
   resultsLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#6b7280',
+    color: '#888888',
     marginTop: 20,
     marginBottom: 4,
   },
