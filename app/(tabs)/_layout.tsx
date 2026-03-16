@@ -1,15 +1,24 @@
 import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#2563eb',
-        tabBarInactiveTintColor: '#9ca3af',
-        headerStyle: { backgroundColor: '#1e40af' },
-        headerTintColor: '#fff',
-        headerTitleStyle: { fontWeight: 'bold' },
+        tabBarActiveTintColor: '#FF6B00',
+        tabBarInactiveTintColor: '#555555',
+        tabBarStyle: {
+          backgroundColor: '#1A1A1A',
+          borderTopColor: '#2A2A2A',
+          borderTopWidth: 1,
+        },
+        headerStyle: { backgroundColor: '#1A1A1A' },
+        headerTintColor: '#FAFAFA',
+        headerTitleStyle: {
+          fontFamily: 'BarlowCondensed_700Bold',
+          fontSize: 22,
+          letterSpacing: 1,
+        },
       }}
     >
       <Tabs.Screen
@@ -17,9 +26,8 @@ export default function TabsLayout() {
         options={{
           title: 'Scan',
           tabBarLabel: 'Scan',
-          tabBarIcon: ({ color }) => (
-            // Using text emoji as lightweight icon — replace with @expo/vector-icons if desired
-            <TabIcon icon="📡" color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'scan' : 'scan-outline'} size={24} color={color} />
           ),
         }}
       />
@@ -28,7 +36,9 @@ export default function TabsLayout() {
         options={{
           title: 'Tag Bike',
           tabBarLabel: 'Tag',
-          tabBarIcon: ({ color }) => <TabIcon icon="🏷️" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'pricetag' : 'pricetag-outline'} size={24} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -36,13 +46,11 @@ export default function TabsLayout() {
         options={{
           title: 'Search Stolen',
           tabBarLabel: 'Search',
-          tabBarIcon: ({ color }) => <TabIcon icon="🔍" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'search' : 'search-outline'} size={24} color={color} />
+          ),
         }}
       />
     </Tabs>
   );
-}
-
-function TabIcon({ icon, color: _ }: { icon: string; color: string }) {
-  return <Text style={{ fontSize: 20 }}>{icon}</Text>;
 }
