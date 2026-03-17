@@ -147,3 +147,6 @@ expo-env.d.ts
 
 # Git worktrees
 .worktrees/
+
+# Superpowers planning tool
+.superpowers/
