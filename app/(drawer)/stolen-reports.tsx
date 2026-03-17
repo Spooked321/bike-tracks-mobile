@@ -14,7 +14,7 @@ import { searchBikes } from '../../api/bikeindex';
 import { BikeCard } from '../../components/BikeCard';
 import type { BikeListItem } from '../../types/bike';
 
-export default function SearchScreen() {
+export default function StolenReportsScreen() {
   const [query, setQuery] = useState('');
   const [stolenOnly, setStolenOnly] = useState(false);
   const [results, setResults] = useState<BikeListItem[]>([]);
