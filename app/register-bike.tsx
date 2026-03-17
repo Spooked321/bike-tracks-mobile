@@ -190,19 +190,19 @@ export default function RegisterBikeScreen() {
         )}
 
         <Text style={styles.label}>Make *</Text>
-        <TextInput style={styles.input} value={make} onChangeText={setMake} placeholder="e.g. Trek" placeholderTextColor="#333333" returnKeyType="next" />
+        <TextInput style={styles.input} value={make} onChangeText={setMake} placeholder="e.g. Trek" placeholderTextColor="#333333" returnKeyType="next" maxLength={100} />
 
         <Text style={styles.label}>Model *</Text>
-        <TextInput style={styles.input} value={model} onChangeText={setModel} placeholder="e.g. Marlin 5" placeholderTextColor="#333333" returnKeyType="next" />
+        <TextInput style={styles.input} value={model} onChangeText={setModel} placeholder="e.g. Marlin 5" placeholderTextColor="#333333" returnKeyType="next" maxLength={100} />
 
         <Text style={styles.label}>Serial Number *</Text>
-        <TextInput style={styles.input} value={serial} onChangeText={setSerial} placeholder="Found under the bottom bracket" placeholderTextColor="#333333" autoCapitalize="characters" returnKeyType="next" />
+        <TextInput style={styles.input} value={serial} onChangeText={setSerial} placeholder="Found under the bottom bracket" placeholderTextColor="#333333" autoCapitalize="characters" returnKeyType="next" maxLength={60} />
 
         <Text style={styles.label}>Color *</Text>
-        <TextInput style={styles.input} value={color} onChangeText={setColor} placeholder="e.g. Blue" placeholderTextColor="#333333" returnKeyType="next" />
+        <TextInput style={styles.input} value={color} onChangeText={setColor} placeholder="e.g. Blue" placeholderTextColor="#333333" returnKeyType="next" maxLength={60} />
 
         <Text style={styles.label}>Year</Text>
-        <TextInput style={styles.input} value={year} onChangeText={setYear} placeholder={`e.g. ${CURRENT_YEAR}`} placeholderTextColor="#333333" keyboardType="numeric" returnKeyType="done" />
+        <TextInput style={styles.input} value={year} onChangeText={setYear} placeholder={`e.g. ${CURRENT_YEAR}`} placeholderTextColor="#333333" keyboardType="numeric" returnKeyType="done" maxLength={4} />
 
         <TouchableOpacity style={styles.primaryButton} onPress={handleSubmit}>
           <Text style={styles.primaryButtonText}>Register Bike</Text>

@@ -13,6 +13,11 @@ if (Platform.OS !== 'web') {
   Ndef = nfcModule.Ndef;
 }
 
+// Reject tag content that is implausibly long (guards against malicious tags)
+const MAX_TAG_CONTENT_LENGTH = 500;
+// BikeIndex IDs are positive integers; reject values outside this range
+const MAX_BIKEINDEX_ID = 100_000_000;
+
 export type NFCState =
   | 'idle'
   | 'starting'
@@ -102,10 +107,17 @@ export function useNFC(): UseNFCReturn {
         new Uint8Array(firstRecord.payload)
       );
 
+      if (decoded.length > MAX_TAG_CONTENT_LENGTH) {
+        setScannedTag({ type: 'unknown', raw: decoded.slice(0, 80) + '…' });
+        setState('idle');
+        return;
+      }
+
+      const parsedId = parseInt(decoded, 10);
       if (decoded.startsWith('bt:')) {
         setScannedTag({ type: 'bt', id: decoded });
-      } else if (!isNaN(parseInt(decoded, 10))) {
-        setScannedTag({ type: 'bikeindex', id: parseInt(decoded, 10) });
+      } else if (!isNaN(parsedId) && parsedId > 0 && parsedId <= MAX_BIKEINDEX_ID) {
+        setScannedTag({ type: 'bikeindex', id: parsedId });
       } else {
         setScannedTag({ type: 'unknown', raw: decoded });
       }

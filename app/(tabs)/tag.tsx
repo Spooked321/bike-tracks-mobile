@@ -113,6 +113,7 @@ export default function TagScreen() {
             keyboardType="numeric"
             editable={screenState !== 'verifying' && screenState !== 'writing'}
             returnKeyType="done"
+            maxLength={10}
             onSubmitEditing={handleVerify}
           />
           <TouchableOpacity
