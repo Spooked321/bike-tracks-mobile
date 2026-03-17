@@ -21,7 +21,7 @@ export default function RootLayout() {
 
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="register-bike" options={{ title: 'Register Bike', presentation: 'modal', headerStyle: { backgroundColor: '#1A1A1A' }, headerTintColor: '#FAFAFA' }} />
       <Stack.Screen name="+not-found" />
