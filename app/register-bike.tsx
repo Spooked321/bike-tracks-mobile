@@ -23,7 +23,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 
 export default function RegisterBikeScreen() {
   const router = useRouter();
-  const { source } = useLocalSearchParams<{ source?: 'scan' | 'tag' }>();
+  const { source } = useLocalSearchParams<{ source?: 'scan' | 'tag' | 'my-bikes' }>();
   const { isSupported, isEnabled, state: nfcState, error: nfcError, writeTag } = useNFC();
 
   const [screenState, setScreenState] = useState<ScreenState>('form');
@@ -180,6 +180,8 @@ export default function RegisterBikeScreen() {
         <Text style={styles.subheading}>
           {source === 'scan'
             ? 'This tag is blank. Register your bike to claim it.'
+            : source === 'my-bikes'
+            ? 'Fill in the details to register your bike.'
             : 'Fill in the details to register your bike and write an NFC tag.'}
         </Text>
 
