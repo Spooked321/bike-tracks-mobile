@@ -1,4 +1,4 @@
-import { registerBike, getBikeByBtId, BtBikeNotFoundError } from '../../api/bikes';
+import { registerBike, getBikeByBtId, getMyBikes, BtBikeNotFoundError } from '../../api/bikes';
 
 describe('registerBike', () => {
   it('returns an OurBike with a bt:-prefixed id and status registered', async () => {
@@ -50,5 +50,26 @@ describe('getBikeByBtId', () => {
     const err = await getBikeByBtId('some-random-tag').catch((e) => e);
     expect(err).toBeInstanceOf(BtBikeNotFoundError);
     expect(err.message).toContain('some-random-tag');
+  });
+});
+
+describe('getMyBikes', () => {
+  it('returns an array of OurBike with at least one item', async () => {
+    const result = await getMyBikes();
+
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
+  });
+
+  it('returns bikes with required OurBike fields', async () => {
+    const result = await getMyBikes();
+    const bike = result[0];
+
+    expect(bike.id).toBeDefined();
+    expect(bike.make).toBeDefined();
+    expect(bike.model).toBeDefined();
+    expect(bike.serial).toBeDefined();
+    expect(bike.color).toBeDefined();
+    expect(bike.status).toBeDefined();
   });
 });

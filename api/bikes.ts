@@ -60,3 +60,19 @@ export async function getBikeByBtId(btId: string): Promise<OurBike> {
     status: 'registered',
   };
 }
+
+// STUB: replace with GET /api/bikes (authenticated, returns user's registered bikes)
+export async function getMyBikes(): Promise<OurBike[]> {
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  return [
+    {
+      id: 'bt:00000000-0000-4000-8000-000000000001',
+      make: 'Trek',
+      model: 'Marlin 5',
+      serial: 'WTU214500A1234',
+      color: 'Blue',
+      year: 2022,
+      status: 'registered',
+    },
+  ];
+}
