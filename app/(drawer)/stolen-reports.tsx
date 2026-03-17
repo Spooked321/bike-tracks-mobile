@@ -53,7 +53,7 @@ export default function SearchScreen() {
         renderItem={({ item }) => <BikeCard bike={item} />}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={styles.heading}>Search Stolen Bikes</Text>
+            <Text style={styles.heading}>Stolen Reports</Text>
             <Text style={styles.subheading}>
               Search BikeIndex.org by serial number to check if a bike is reported stolen.
             </Text>
