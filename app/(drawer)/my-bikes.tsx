@@ -22,18 +22,23 @@ export default function MyBikesScreen() {
 
   const [bikes, setBikes] = useState<OurBike[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [writingBikeId, setWritingBikeId] = useState<string | null>(null);
 
   useEffect(() => {
     getMyBikes()
       .then(setBikes)
+      .catch(() => setLoadError('Failed to load bikes. Please try again.'))
       .finally(() => setLoading(false));
   }, []);
 
   async function handleWriteTag(bike: OurBike) {
     setWritingBikeId(bike.id);
-    await writeTag(bike.id);
-    setWritingBikeId(null);
+    try {
+      await writeTag(bike.id);
+    } finally {
+      setWritingBikeId(null);
+    }
   }
 
   function handleReportStolen(bike: OurBike) {
@@ -99,6 +104,10 @@ export default function MyBikesScreen() {
         <View style={styles.centered}>
           <ActivityIndicator color={colors.orange} size="large" />
         </View>
+      ) : loadError ? (
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>{loadError}</Text>
+        </View>
       ) : (
         <FlatList
           data={bikes}
@@ -146,6 +155,12 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#888888',
     fontSize: 16,
+  },
+  errorText: {
+    color: '#FF3131',
+    fontSize: 15,
+    textAlign: 'center',
+    paddingHorizontal: 24,
   },
   actionRow: {
     flexDirection: 'row',
